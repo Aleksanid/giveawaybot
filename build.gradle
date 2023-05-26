@@ -5,6 +5,7 @@ plugins {
 }
 
 jar {
+	enabled = false
 	manifest {
 		attributes(
 				'Main-Class': 'ua.aleksanid.giveawaybot.GiveawaybotApplication'
