@@ -7,7 +7,7 @@ plugins {
 jar {
 	manifest {
 		attributes(
-				'Main-Class': 'ua.aleksanid.GiveawaybotApplication'
+				'Main-Class': 'ua.aleksanid.giveawaybot.GiveawaybotApplication'
 		)
 	}
 }
