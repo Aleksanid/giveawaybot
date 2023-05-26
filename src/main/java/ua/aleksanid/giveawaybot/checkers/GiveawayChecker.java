@@ -37,8 +37,8 @@ public class GiveawayChecker {
 
         Date currentDate = new Date();
 
-        String latestGiveaway = redisService.getString("latestCheck");
-        Date latestCheckDate = parseGiveawayDateOr(latestGiveaway, new Date(0));
+        String latestGiveawayCheck = redisService.getString("latestCheck");
+        Date latestCheckDate = parseGiveawayDateOr(latestGiveawayCheck, new Date(0));
 
 
         List<Giveaway> newGiveaways = extractNewGiveaways(giveaways, latestCheckDate);

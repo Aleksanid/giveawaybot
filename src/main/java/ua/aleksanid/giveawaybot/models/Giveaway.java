@@ -1,7 +1,7 @@
 package ua.aleksanid.giveawaybot.models;
 
 public class Giveaway {
-    public static final String DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private int id;
     private String title;
     private String worth;
