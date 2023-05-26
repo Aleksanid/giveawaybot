@@ -1,10 +1,5 @@
 package ua.aleksanid.giveawaybot.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import javax.xml.crypto.Data;
-import java.util.Date;
-
 public class Giveaway {
     public static final String DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
     private int id;

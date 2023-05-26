@@ -31,8 +31,8 @@ public class GiveawayChecker {
     }
 
 
-    @Scheduled(fixedDelay = 60000)
-    private void checkGiveaways(){
+    @Scheduled(fixedDelay = 3600000)
+    private void checkGiveaways() {
         List<Giveaway> giveaways = gamePowerClient.getGiveaways("pc", "date", null);
 
         Date currentDate = new Date();
@@ -43,13 +43,17 @@ public class GiveawayChecker {
 
         List<Giveaway> newGiveaways = extractNewGiveaways(giveaways, latestCheckDate);
 
+        if (newGiveaways.isEmpty()) {
+            return;
+        }
+
         notifySubscribers(newGiveaways);
 
         redisService.putString("latestCheck", new SimpleDateFormat(Giveaway.DATE_FORMAT).format(currentDate));
     }
 
     private void notifySubscribers(List<Giveaway> newGiveaways) {
-        String message = newGiveaways.stream().map(Giveaway::getOpenGiveawayUrl).collect(Collectors.joining("\n","New:\n",""));
+        String message = newGiveaways.stream().map(Giveaway::getOpenGiveawayUrl).collect(Collectors.joining("\n", "New:\n", ""));
 
         List<String> subscribers = redisService.getStringList("subscribers");
 
@@ -66,9 +70,9 @@ public class GiveawayChecker {
     }
 
 
-    private Date parseGiveawayDateOr(String toParse, Date defaultValue){
+    private Date parseGiveawayDateOr(String toParse, Date defaultValue) {
 
-        if(toParse == null){
+        if (toParse == null) {
             return defaultValue;
         }
 

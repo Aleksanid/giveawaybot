@@ -35,20 +35,20 @@ public class GamePowerClient {
     }
 
 
-    public List<Giveaway> getGiveaways(String platform, String sortBy, String type){
+    public List<Giveaway> getGiveaways(String platform, String sortBy, String type) {
         HashMap<String, String> uriVariables = new HashMap<>();
 
-        if(platform != null) uriVariables.put("platform", platform);
-        if(sortBy != null) uriVariables.put("sort-by", sortBy);
-        if(type != null) uriVariables.put("type", type);
+        if (platform != null) uriVariables.put("platform", platform);
+        if (sortBy != null) uriVariables.put("sort-by", sortBy);
+        if (type != null) uriVariables.put("type", type);
 
 
         Mono<List<Giveaway>> response = this.webClient.get()
-                .uri("/giveaways",uriVariables).exchangeToMono(httpResponse -> {
+                .uri("/giveaways", uriVariables).exchangeToMono(httpResponse -> {
                     if (httpResponse.statusCode().equals(HttpStatus.OK)) {
                         return httpResponse.bodyToMono(new ParameterizedTypeReference<>() {
                         });
-                    }else {
+                    } else {
                         return httpResponse.createError();
                     }
                 });

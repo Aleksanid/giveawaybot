@@ -12,7 +12,7 @@ public class TelegramBotService {
     private final TelegramConfiguration telegramConfiguration;
     private final TelegramBot telegramBot;
 
-    TelegramBotService(TelegramBotListener telegramBotListener, TelegramConfiguration telegramConfiguration){
+    TelegramBotService(TelegramBotListener telegramBotListener, TelegramConfiguration telegramConfiguration) {
         this.telegramConfiguration = telegramConfiguration;
         telegramBot = new TelegramBot(telegramConfiguration.getBotToken());
         telegramBot.setUpdatesListener(telegramBotListener);

@@ -20,9 +20,9 @@ public class TelegramBotListener implements UpdatesListener {
 
     @Override
     public int process(List<Update> updates) {
-        for (Update update:
-             updates) {
-            if(update.message()!=null) {
+        for (Update update :
+                updates) {
+            if (update.message() != null) {
                 String text = update.message().text();
                 if (text != null && text.equals("Sub")) {
                     this.addSubscription(update.message().chat().id());
@@ -30,7 +30,7 @@ public class TelegramBotListener implements UpdatesListener {
                 }
             }
         }
-        
+
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
