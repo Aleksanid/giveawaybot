@@ -9,13 +9,11 @@ import ua.aleksanid.giveawaybot.listeners.TelegramBotListener;
 
 @Service
 public class TelegramBotService {
-    private final TelegramConfiguration telegramConfiguration;
     private final TelegramBot telegramBot;
 
-    TelegramBotService(TelegramBotListener telegramBotListener, TelegramConfiguration telegramConfiguration) {
-        this.telegramConfiguration = telegramConfiguration;
+    TelegramBotService(TelegramConfiguration telegramConfiguration, RedisService redisService) {
         telegramBot = new TelegramBot(telegramConfiguration.getBotToken());
-        telegramBot.setUpdatesListener(telegramBotListener);
+        telegramBot.setUpdatesListener(new TelegramBotListener(redisService, telegramBot));
     }
 
     public void sendMessage(String message, String chatId) {

@@ -5,7 +5,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import ua.aleksanid.giveawaybot.configurations.RedisConfiguration;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 public class RedisService {
@@ -24,21 +24,27 @@ public class RedisService {
         }
     }
 
-    public void putIntoStringList(String listKey, String toAdd) {
+    public void putIntoStringSet(String setKey, String element) {
         try (Jedis jedis = jedisPool.getResource()) {
-            jedis.lpush(listKey, toAdd);
+            jedis.sadd(setKey, element);
         }
     }
 
-    public List<String> getStringList(String listKey) {
+    public Set<String> getStringList(String listKey) {
         try (Jedis jedis = jedisPool.getResource()) {
-            return jedis.lrange(listKey, 0, -1);
+            return jedis.smembers(listKey);
         }
     }
 
     public void putString(String key, String value) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.set(key, value);
+        }
+    }
+
+    public void deleteFromStringSet(String setKey, String element) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.srem(setKey, element);
         }
     }
 }

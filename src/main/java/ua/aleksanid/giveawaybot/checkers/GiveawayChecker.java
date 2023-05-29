@@ -10,19 +10,22 @@ import ua.aleksanid.giveawaybot.models.Giveaway;
 import ua.aleksanid.giveawaybot.services.RedisService;
 import ua.aleksanid.giveawaybot.services.TelegramBotService;
 
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Component
 @EnableScheduling
 public class GiveawayChecker {
     private static final Logger logger = LoggerFactory.getLogger(GiveawayChecker.class);
+    private static final String TELEGRAM_MESSAGE_FORMAT = "New giveaway: {0} for {1}.\n{2}";
     private final TelegramBotService telegramBotService;
     private final RedisService redisService;
     private final GamePowerClient gamePowerClient;
+
 
     public GiveawayChecker(TelegramBotService telegramBotService, RedisService redisService, GamePowerClient gamePowerClient) {
         this.telegramBotService = telegramBotService;
@@ -46,6 +49,7 @@ public class GiveawayChecker {
         if (newGiveaways.isEmpty()) {
             return;
         }
+        logger.info("{} new giveaways detected", newGiveaways.size());
 
         notifySubscribers(newGiveaways);
 
@@ -53,20 +57,21 @@ public class GiveawayChecker {
     }
 
     private void notifySubscribers(List<Giveaway> newGiveaways) {
-        String message = newGiveaways.stream().map(Giveaway::getOpenGiveawayUrl).collect(Collectors.joining("\n", "New:\n", ""));
+        List<String> messages = newGiveaways.stream()
+                .map(giveaway -> MessageFormat.format(TELEGRAM_MESSAGE_FORMAT, giveaway.getTitle(), giveaway.getPlatforms(), giveaway.getOpenGiveawayUrl()))
+                .toList();
 
-        List<String> subscribers = redisService.getStringList("subscribers");
+        Set<String> subscribers = redisService.getStringList("subscribers");
 
-        subscribers.forEach(subscriber -> telegramBotService.sendMessage(message, subscriber));
+        subscribers.forEach(subscriber -> messages.forEach(message -> telegramBotService.sendMessage(message, subscriber)));
     }
 
     private List<Giveaway> extractNewGiveaways(List<Giveaway> giveaways, Date latestDate) {
-        return giveaways.stream().filter(giveaway -> {
-            Date publishedDate = parseGiveawayDateOr(giveaway.getPublishedDate(), null);
-
-
-            return publishedDate != null && publishedDate.after(latestDate);
-        }).toList();
+        return giveaways.stream()
+                .filter(giveaway -> {
+                    Date publishedDate = parseGiveawayDateOr(giveaway.getPublishedDate(), null);
+                    return publishedDate != null && publishedDate.after(latestDate);
+                }).toList();
     }
 
 
