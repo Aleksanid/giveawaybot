@@ -34,8 +34,9 @@ public class GiveawayChecker {
     }
 
 
-    @Scheduled(fixedDelay = 3600000)
+    @Scheduled(fixedDelay = 3600000, initialDelay = 1000)
     private void checkGiveaways() {
+        logger.info("Checking for new giveaways");
         List<Giveaway> giveaways = gamePowerClient.getGiveaways("pc", "date", null);
 
         Date currentDate = new Date();
